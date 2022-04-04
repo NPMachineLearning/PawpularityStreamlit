@@ -3,7 +3,6 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter
-import cv2
 from os import path
 
 IMAGE_SIZE = 224
