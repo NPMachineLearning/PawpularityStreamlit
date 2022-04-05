@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter
 from os import path
 
-IMAGE_SIZE = 224
+IMAGE_SIZE = 240
 
 @st.cache
 def load_lite_model(model_path):
@@ -60,7 +60,7 @@ def predict_pawpularity(lite_model,
     return pred.numpy()
 
 # load pawnet model
-model_path = path.join("models", "pawnet_224.tflite")
+model_path = path.join("models", "pawnet_240.tflite")
 model = load_lite_model(model_path)
 
 # store uploaded image
@@ -89,5 +89,5 @@ with st.container():
         if analyze:
             prediction, img = predict_pawpularity(model, uploaded_image, return_image=True)
             st.text(f"Pawpularity: {prediction}%")
-            st.image(img)
+            # st.image(img)
     
