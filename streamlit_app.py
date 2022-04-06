@@ -87,7 +87,7 @@ with st.container():
         analyze = st.button("Analyze pawpularity")
 
         if analyze:
-            prediction, img = predict_pawpularity(model, uploaded_image, return_image=True)
-            st.text(f"Pawpularity: {prediction}%")
-            # st.image(img)
+            with st.spinner("Analyzing image ...."):
+                prediction, img = predict_pawpularity(model, uploaded_image, return_image=True)
+                st.text(f"Pawpularity: {prediction}%")
     
