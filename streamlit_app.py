@@ -66,7 +66,32 @@ model = load_lite_model(model_path)
 # store uploaded image
 uploaded_image = None
 
-st.header("Pawpularity")
+
+left_margin, col2, right_margin = st.columns(3)
+with left_margin:
+    pass
+with col2:
+    st.header("Pawpularity")
+with right_margin:
+    pass
+
+st.markdown("""
+Pawpularity is an app mimicing human's perception about an image.
+In addition, it generalize popularity of an image and rank it in score.
+""")
+
+st.markdown("""
+Pawpularity adopt machine learning to analyze an image such as dog and cat
+then rank image in score between 0% ~ 100%.
+
+**⚠️ Pawpularity was trained with thousand of image of dog and cat therefore, it
+is ideal to given image in dog and cat**
+
+**⚠️ Using variety of photography and editing skills may improve or lower the score**
+
+**⚠️ Human's perception is dependent in individual and subjective. Therefore, score
+from pawpularity is only for reference and not ideal for abosulte score**
+""")
 
 with st.container():
     uploaded_image = st.file_uploader("Upload image file", 
