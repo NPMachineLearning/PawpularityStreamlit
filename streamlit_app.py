@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 import streamlit as st
 import tensorflow as tf
 import numpy as np
@@ -34,6 +33,8 @@ def predict_pawpularity(lite_model,
 
     # preprocessing image
     image = Image.open(image_buffer)
+    if image.width<240 or image.height<240:
+        raise Exception("The minimum size of an image is 240 x 240")
     image = tf.image.resize(image, [IMAGE_SIZE, IMAGE_SIZE])
     if rescale:
         image = image / 255
@@ -76,27 +77,44 @@ with right_margin:
     pass
 
 st.markdown("""
-Pawpularity is an app mimicing human's perception about an image.
-In addition, it generalize popularity of an image and rank it in score.
+**Pawpularity is an app mimicing human's perception about an image.
+In addition, it generalize popularity of an image and rank it in score.**
+
+**The motivation of pawpularity is to help photographer to take photo of an animal which
+is pleasant to general public and hopefully to establish a bounding between the human
+and animal at first sight. As a result, this can potentially increase adopting rate in 
+animal homeless shelter and curiosity from human to an animal.**  
 """)
 
 st.markdown("""
 Pawpularity adopt machine learning to analyze an image such as dog and cat
 then rank image in score between 0% ~ 100%.
 
-**⚠️ Pawpularity was trained with thousand of image of dog and cat therefore, it
-is ideal to given image in dog and cat**
+⚠️ Pawpularity was trained with thousand of image of dog and cat therefore, it
+is ideal to given an image of dog or cat.
 
-**⚠️ Using variety of photography and editing skills may improve or lower the score**
+⚠️ Using variety of photography and editing skills such as brightness, saturation, 
+cropping and angling may lead to improve or lower the score.
 
-**⚠️ Human's perception is dependent in individual and subjective. Therefore, score
-from pawpularity is only for reference and not ideal for abosulte score**
+⚠️ Human's perception is dependent in individual and subjective. Therefore, score
+from pawpularity is probabilistic and is not ideal for absolute score.
 """)
+
+left_margin, col2, right_margin = st.columns([1,3,1])
+with left_margin:
+    pass
+with col2:
+    st.subheader("Let's upload an image")
+    st.markdown("""
+    ⚠️ The minimun size of an image is 240 x 240
+    """)
+with right_margin:
+    pass
 
 with st.container():
     uploaded_image = st.file_uploader("Upload image file", 
                                     type=["jpeg", "jpg"], 
-                                    help="Upload an image of pet")                             
+                                    help="Upload an image of pet")                           
 
     if uploaded_image is not None:
         left_margin, col2, right_margin = st.columns(3)
@@ -109,10 +127,56 @@ with st.container():
 
 with st.container():
     if uploaded_image is not None:
-        analyze = st.button("Analyze pawpularity")
+        left_margin, col2, right_margin = st.columns([5,2,5])
+        with left_margin:
+            pass
+        with col2:
+            analyze = st.button("Pawpularity")
+        with right_margin:
+            pass
+        
 
         if analyze:
             with st.spinner("Analyzing image ...."):
-                prediction, img = predict_pawpularity(model, uploaded_image, return_image=True)
-                st.text(f"Pawpularity: {prediction}%")
+                try:
+                    prediction, img = predict_pawpularity(model, uploaded_image, return_image=True)
+                    left_margin, col2, right_margin = st.columns([2,3,1])
+                    with left_margin:
+                        pass
+                    with col2:
+                        st.markdown(f"""
+                        ### Pawpularity: {prediction}%
+                        """)
+                        if prediction <= 60.:
+                            st.markdown("""
+                            ⚠️ Try different photography skills or filters can improve the overall score.
+
+                            **Tips:**
+                            * Brightness, constrast, saturation
+                            * Take photo with indoor or outdoor background
+                            * Make sure photo is not blurry
+                            * Center the animal in photo
+                            * Full animal body in photo
+                            * Don't blend animal in background
+                            """)
+                        elif prediction > 60. and prediction < 90.:
+                            st.markdown("""
+                            The photo is decent and I believe people like it.
+                            """)
+                        else:
+                            st.markdown("""
+                            Well done the photo is perfect and I believe people love it
+                            """)
+                    with right_margin:
+                        pass
+                except Exception as e:
+                    left_margin, col2, right_margin = st.columns([2,3,1])
+                    with left_margin:
+                        pass
+                    with col2:
+                        st.error(e)
+                    with right_margin:
+                        pass
+
+                
     
